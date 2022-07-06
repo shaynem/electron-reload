@@ -15,12 +15,16 @@ export interface ElectronReloadOptions extends WatchOptions {
      * Arguments passed to the application (relevant for hard
      * resets).
      */
-    appArgv?: [string]
+    appArgv?: [string],
     /**
      * Determines how to terminate electron in case of hard resets.
      * See 'https://www.electronjs.org/docs/api/app' for details.
      */
     hardResetMethod?: "exit" | "quit",
+     /**
+     * Add additional directories or files to watch for hard reset, outside main.js.
+     */
+    hardResetWatch?: [string],
     /**
      * Enforces a hard reset for all changes (and not just the main
      * file).

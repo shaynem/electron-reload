@@ -9,7 +9,7 @@ const ignoredPaths = /node_modules|[/\\]\./
 // only effective when the process is restarted (hard reset)
 // We assume that electron-reload is required by the main
 // file of the electron application
-const mainFile = module.parent.filename
+let mainFile = module.parent.filename
 
 /**
  * Creates a callback for hard resets.
@@ -73,12 +73,14 @@ module.exports = function elecronReload (glob, options = {}) {
   watcher.on('change', softResetHandler)
 
   // Preparing hard reset if electron executable is given in options
-  // A hard reset is only done when the main file has changed
+  // A hard reset is only done when the main file has changed by default, setting hardResetWatch adds additional hardreset directories or files
   if (eXecutable) {
     if (!fs.existsSync(eXecutable)) {
       throw new Error('Provided electron executable cannot be found or is not exeecutable!')
     }
-
+    if (options.hardResetWatch) {
+      mainFile = [mainFile, ...options.hardResetWatch]
+    }
     const hardWatcher = chokidar.watch(mainFile, Object.assign({ ignored: [ignoredPaths] }, options))
 
     if (options.forceHardReset === true) {
